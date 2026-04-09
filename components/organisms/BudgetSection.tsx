@@ -4,11 +4,13 @@ import * as React from "react";
 import { Card } from "@/components/atoms/Card";
 import { ChartHeader } from "@/components/molecules/ChartHeader";
 import { BudgetProgress } from "@/components/molecules/BudgetProgress";
+import { AddExpenseModal } from "@/components/organisms/AddExpenseModal";
 import { formatCurrency } from "@/lib/format";
 import { useFinance } from "@/hooks/useFinance";
 
 function BudgetSection() {
   const { budgetSummary } = useFinance();
+  const [open, setOpen] = React.useState(false);
 
   const segments = [
     {
@@ -23,19 +25,30 @@ function BudgetSection() {
     },
     {
       label: "Reserved",
-      percentage: Math.max(0, 100 - Math.round(budgetSummary.unusedPercent) - Math.round(budgetSummary.usedPercent)),
+      percentage: Math.max(
+        0,
+        100 -
+          Math.round(budgetSummary.unusedPercent) -
+          Math.round(budgetSummary.usedPercent)
+      ),
       color: "#f1f5f9",
     },
   ];
 
   return (
-    <Card className="flex flex-col gap-4">
-      <ChartHeader
-        title="Budget usage"
-        value={formatCurrency(budgetSummary.totalBudget)}
-      />
-      <BudgetProgress segments={segments} />
-    </Card>
+    <>
+      <Card className="flex flex-col gap-4">
+        <ChartHeader
+          title="Budget usage"
+          value={formatCurrency(budgetSummary.totalBudget)}
+          onAdd={() => setOpen(true)}
+          href="/budgets"
+        />
+        <BudgetProgress segments={segments} />
+      </Card>
+
+      <AddExpenseModal open={open} onClose={() => setOpen(false)} />
+    </>
   );
 }
 

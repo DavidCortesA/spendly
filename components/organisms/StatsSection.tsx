@@ -3,8 +3,8 @@
 import * as React from "react";
 import { StatCard } from "@/components/molecules/StatCard";
 import { formatCurrency } from "@/lib/format";
-import { Button } from "@/components/atoms/Button";
 import { Settings2 } from "lucide-react";
+import Link from "next/link";
 import { useFinance } from "@/hooks/useFinance";
 
 function StatsSection() {
@@ -36,10 +36,13 @@ function StatsSection() {
         className="flex-1"
       />
       <div className="flex items-center">
-        <Button variant="outline" className="gap-2 h-10 rounded-xl border-border px-4">
+        <Link
+          href="/settings"
+          className="flex items-center gap-2 h-10 rounded-xl border border-border bg-background px-4 text-sm font-medium text-foreground transition-colors hover:bg-muted"
+        >
           <Settings2 size={14} />
-          <span className="text-sm">Manage Balance</span>
-        </Button>
+          Manage Balance
+        </Link>
       </div>
     </div>
   );

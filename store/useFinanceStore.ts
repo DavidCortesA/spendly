@@ -6,6 +6,7 @@ import type { Expense, ExpenseCategory } from "@/types/expense";
 import type { Income } from "@/types/income";
 import type { Budget } from "@/types/budget";
 import { mockExpenses, mockIncome, mockBudgets } from "@/lib/mock-data";
+import { pushNotification } from "@/store/useNotificationStore";
 
 export interface Category {
   id: string;
@@ -66,7 +67,7 @@ export const useFinanceStore = create<FinanceState>()(
       categories: DEFAULT_CATEGORIES,
       budgets: mockBudgets,
 
-      addExpense: (expense) =>
+      addExpense: (expense) => {
         set((state) => ({
           expenses: [
             ...state.expenses,
@@ -76,7 +77,13 @@ export const useFinanceStore = create<FinanceState>()(
               createdAt: new Date().toISOString(),
             },
           ],
-        })),
+        }));
+        pushNotification({
+          title: "Expense recorded",
+          message: `${expense.description} — $${expense.amount.toLocaleString("en-US", { minimumFractionDigits: 2, maximumFractionDigits: 2 })} added to ${expense.category}.`,
+          type: "info",
+        });
+      },
 
       removeExpense: (id) =>
         set((state) => ({
@@ -90,7 +97,7 @@ export const useFinanceStore = create<FinanceState>()(
           ),
         })),
 
-      addIncome: (income) =>
+      addIncome: (income) => {
         set((state) => ({
           income: [
             ...state.income,
@@ -100,7 +107,13 @@ export const useFinanceStore = create<FinanceState>()(
               createdAt: new Date().toISOString(),
             },
           ],
-        })),
+        }));
+        pushNotification({
+          title: "Income recorded",
+          message: `${income.description} — $${income.amount.toLocaleString("en-US", { minimumFractionDigits: 2, maximumFractionDigits: 2 })} from ${income.source}.`,
+          type: "success",
+        });
+      },
 
       removeIncome: (id) =>
         set((state) => ({
